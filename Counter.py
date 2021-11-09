@@ -1,3 +1,9 @@
+"""
+
+Work By AKS 
+Ahmed Khalil Seddik
+
+"""
 def para():
     decks=input("How many decks ?")
     minbet=input("Minimum bet = ?")
