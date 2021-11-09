@@ -38,9 +38,7 @@ def count(cards,L):
 
 def hardreset():
     decks,minibet,DAS=para()
-    L=dict()
-    for i in range(1,10):
-        L[i]=4*decks
+    L = {i: 4*decks for i in range(1,10)}
     L[10]=16*decks
     return(decks,minibet,DAS,L,0,decks)
 
@@ -60,14 +58,13 @@ def HardSoft(H):
     if "1" not in H:
         return("Hard")
     L=[]
-    for i in range(len(H)):
-        if H[i]=="0":L+=[10]
-        else:L+=[int(H[i])]
+    for item in H:
+        L += [10] if item == "0" else [int(item)]
     L+=[10]
     return(["Soft","Hard"][sum(L)>21])
 
 def Hard(H,D):
-    D=[int(D),int(D)+10][D=="0" or D=="1"]
+    D = [int(D),int(D)+10][D in ["0", "1"]]
     H=list(H)
     H=[int(x) if x!="0" else 10 for x in H]
     total=sum(H)
@@ -77,70 +74,70 @@ def Hard(H,D):
     if 13<=total<=16:
         if 2<=D<=6:print("Stand")
         else:print("Hit")
-    if total==12:
-        if 4<=D<=6:print("Stand")
-        else:print("Hit")
-    if total==11:
-        if D==1:print('Hit')
-        else:print("Double if allowed atherwise Hit")
-    if total==10:
+    if total == 10:
         if D<=9:print("Double if allowed atherwise Hit")
         else:print("Hit")
-    if total==9:
+    elif total == 11:
+        if D==1:print('Hit')
+        else:print("Double if allowed atherwise Hit")
+    elif total == 12:
+        if 4<=D<=6:print("Stand")
+        else:print("Hit")
+    elif total == 9:
         if 3<=D<=6:print("Double if allowed atherwise Hit")
         else:print("Hit")
         
 def Soft(H,D):
-    D=[int(D),int(D)+10][D=="0" or D=="1"]
+    D = [int(D),int(D)+10][D in ["0", "1"]]
     H=list(H)
     H=[int(x) if x!="0" else 10 for x in H]
     total=sum(H)-1
     print("Soft",total+11,"V",D)
     if total>=8:print("Stand")
-    if total==7:
+    if (
+        total in [5, 4]
+        and 4 <= D <= 6
+        or total not in [5, 4]
+        and total == 6
+        and 3 <= D <= 6
+    ):
+        if 4<=D<=6 :print("Double if allowed atherwise Hit")
+    elif total in [5, 4, 6]:
+        print("Hit")
+    elif total == 7:
         if D<=6:print("Double if allowed atherwise Stand")
         if 7<=D<=8:print("Stand")
         else:print("Hit")
-    if total==6:
-        if 3<=D<=6 :print("Double if allowed atherwise Hit")
-        else:print("Hit")
-    if total==5 or total==4:
-        if 4<=D<=6 :print("Double if allowed atherwise Hit")
-        else:print("Hit")
     if total<=3:
-        if 5<=D<=6 :print("Double if allowed atherwise Hit")
-        else:print("Hit")
+        if 5<=D<=6:
+            print("Double if allowed atherwise Hit")
+        else:
+            print("Hit")
 
 def Split(H,D,DAS):
-    D=[int(D),int(D)+10][D=="0" or D=="1"]
+    D = [int(D),int(D)+10][D in ["0", "1"]]
     H=int(H)
-    if H==1:print("Split")
-    if H==0:Hard(str(H)*2,D)
-    if H==9:
-        if D in [7,10,11]:Hard(str(H)*2,D)
-        else:print("Split")
-    if H==8:print("Split")
-    if H==7:
+    if H in {0, 5}:
+        Hard(str(H)*2,D)
+    elif H in {1, 8}:
+        print("Split")
+    elif H == 4:
+        if D in [5, 6] and DAS:print("Split")
+        else:Hard(str(H)*2,D)
+    elif H == 6:
+        if D == 2 and DAS or D != 2 and 2 < D < 7:print("Split")
+        else:Hard(str(H)*2,D)
+    elif H == 7:
         if D<8:print("Split")
         else:Hard(str(H)*2,D)
-    if H==6:
-        if D==2:
+    elif H == 9:
+        if D in [7,10,11]:Hard(str(H)*2,D)
+        else:print("Split")
+    if H in {3, 2}:
+        if D < 4 and DAS or D >= 4 and D < 8:
             if DAS:print("Split")
-            else:Hard(str(H)*2,D)
-        elif 2<D<7:print("Split")
-        else:Hard(str(H)*2,D)
-    if H==5:Hard(str(H)*2,D)
-    if H==4:
-        if D in [5,6]:
-            if DAS:print("Split")
-            else:Hard(str(H)*2,D)
-        else:Hard(str(H)*2,D)
-    if H==3 or H==2:
-        if D<4:
-            if DAS:print("Split")
-            else:Hard(str(H)*2,D)
-        elif D<8:print("Split")
-        else:Hard(str(H)*2,D)
+        else:
+            Hard(str(H)*2,D)
 
 
 
